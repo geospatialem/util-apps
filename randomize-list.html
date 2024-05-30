@@ -1,0 +1,103 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+  
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Randomized Team Generator</title> 
+	<script type="module" src="https://js.arcgis.com/calcite-components/2.9.0/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.9.0/calcite.css" />
+</head> 
+
+<style>
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+  }
+  .page-wrapper {
+    margin: 15px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+    height: 100%;
+  }
+</style>
+  
+<body> 
+  <div class="page-wrapper">
+    <div class="row">
+      <div class="column">
+        <calcite-label for="names">Team member names</calcite-label>
+        <calcite-text-area id="names" placeholder="Team members" rows="20" />
+      </div>
+      <div class='column'>
+        <calcite-label for="results">Randomized list</calcite-label>
+        <calcite-text-area id="results" rows="20" read-only />
+      </div>
+    </div>
+    <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
+    <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy">Copy</calcite-button>
+  </div>
+<script> 
+
+  (async () => {
+
+    await customElements.whenDefined("calcite-text-area");
+    await document.getElementById("names").componentOnReady();
+    
+    document.getElementById("names").value = `Aaron\nAbraham\nAdam\nAli\nAnvesh\nBen\nBrittney\nDitwan\nEliza\nErik\nFranco\nJose\nKitty\nMatt`;
+    
+  })();
+
+  document.getElementById("randomize-names").addEventListener("click", () => {
+
+    const comboboxEl = document.querySelector("calcite-text-area");
+    const randomly = () => Math.random() - 0.5;
+    const teamMembers = comboboxEl.value.split("\n");
+
+    const teamNameInfo = Array(teamMembers.length).fill({});
+    const teamMemberName = [].concat(teamMembers).sort(randomly);
+
+    document.getElementById("results").value = "";
+    
+    const randomList = [];
+
+    teamNameInfo.forEach((t, i) => {
+      const itemEl = `${teamMemberName[i]} \n`;
+      const itemVal = randomList.push(itemEl);
+    });
+    
+    const randomListString = randomList.join("")
+    document.getElementById("results").value = randomListString;
+    
+  });
+
+document.getElementById("copy").addEventListener("click", () => {
+  var copyText = document.getElementById("results");
+  copyText.selectText(); // Select the component's text
+  navigator.clipboard.writeText(copyText.value); // Copy the value
+});
+
+</script> 
+</body> 
+  
+</html>
