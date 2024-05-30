@@ -15,24 +15,6 @@
     flex-wrap: wrap;
     width: 100%;
   }
-
-  .column {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-  }
-  .page-wrapper {
-    margin: 15px;
-  }
-
-  .row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
   .column {
     display: flex;
     flex-direction: column;
@@ -40,23 +22,24 @@
     flex: 1;
     height: 100%;
   }
+  body {
+    margin: 1rem;
+  }
 </style>
   
 <body> 
-  <div class="page-wrapper">
-    <div class="row">
-      <div class="column">
-        <calcite-label for="names">Team member names</calcite-label>
-        <calcite-text-area id="names" placeholder="Team members" rows="20" resize="none" />
-      </div>
-      <div class='column'>
-        <calcite-label for="results">Randomized list</calcite-label>
-        <calcite-text-area id="results" rows="20" read-only resize="none" />
-      </div>
+  <div class="row">
+    <div class="column">
+      <calcite-label for="names">Team member names</calcite-label>
+      <calcite-text-area id="names" placeholder="Team members" rows="20" resize="none" />
     </div>
-    <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
-    <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy">Copy</calcite-button>
+    <div class="column">
+      <calcite-label for="results">Randomized list</calcite-label>
+      <calcite-text-area id="results" rows="20" read-only resize="none" />
+    </div>
   </div>
+  <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
+  <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy">Copy</calcite-button>
 <script> 
 
   (async () => {
