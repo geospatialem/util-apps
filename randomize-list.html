@@ -76,7 +76,7 @@
 
   // Copy to clipboard
   document.getElementById("copy").addEventListener("click", () => {
-    var copyText = document.getElementById("results");
+    const copyText = document.getElementById("results");
     copyText.selectText(); // Select the component's text
     navigator.clipboard.writeText(copyText.value); // Copy the value
     document.getElementById("copy-alert").open = true;
