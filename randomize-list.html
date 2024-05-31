@@ -39,46 +39,59 @@
     </div>
   </div>
   <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
-  <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy">Copy</calcite-button>
+  <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy-to-clipboard">Copy</calcite-button>
+
+  <calcite-alert id="copy-alert" icon="copy-to-clipboard" label="A report alert" auto-close auto-close-duration="medium" kind="info">
+    <div slot="title">Copied text!</div>
+    <div slot="message">You can paste the contents in an email, Team message, etc.</div>
+  </calcite-alert>
+
 <script> 
 
+  // Add team members names on load
   (async () => {
-
     await customElements.whenDefined("calcite-text-area");
     await document.getElementById("names").componentOnReady();
-    
     document.getElementById("names").value = `Aaron\nAbraham\nAdam\nAli\nAnvesh\nBen\nBrittney\nDitwan\nEliza\nErik\nFranco\nJose\nKitty\nMatt\nSkye`;
-    
   })();
 
+  // Randomize names
   document.getElementById("randomize-names").addEventListener("click", () => {
-
     const comboboxEl = document.querySelector("calcite-text-area");
+    // Randomize
     const randomly = () => Math.random() - 0.5;
     const teamMembers = comboboxEl.value.split("\n");
-
     const teamNameInfo = Array(teamMembers.length).fill({});
     const teamMemberName = [].concat(teamMembers).sort(randomly);
-
-    document.getElementById("results").value = "";
-    
+    document.getElementById("results").value = ""; // Clear the previous results
     const randomList = [];
-
-    teamNameInfo.forEach((t, i) => {
-      const itemEl = `${teamMemberName[i]} \n`;
+    teamNameInfo.forEach((i, name) => {
+      const itemEl = `${teamMemberName[name]} \n`;
       const itemVal = randomList.push(itemEl);
     });
-    
-    const randomListString = randomList.join("")
+    // Stringify the results
+    const randomListString = randomList.join("");
     document.getElementById("results").value = randomListString;
-    
   });
 
-document.getElementById("copy").addEventListener("click", () => {
-  var copyText = document.getElementById("results");
-  copyText.selectText(); // Select the component's text
-  navigator.clipboard.writeText(copyText.value); // Copy the value
-});
+  // Copy to clipboard
+  document.getElementById("copy").addEventListener("click", () => {
+    var copyText = document.getElementById("results");
+    copyText.selectText(); // Select the component's text
+    navigator.clipboard.writeText(copyText.value); // Copy the value
+    document.getElementById("copy-alert").open = true;
+    // Set focus to the alert once loaded
+    (async () => {
+      await customElements.whenDefined("calcite-alert");
+      const copyAlertEl = await document.getElementById("copy-alert").componentOnReady();
+      requestAnimationFrame(() => copyAlertEl.setFocus());
+    })();
+  });
+
+  // Reset focus on alert close
+  document.getElementById("copy-alert").addEventListener("calciteAlertClose", () => {
+    document.getElementById("copy").setFocus();
+  });
 
 </script> 
 </body> 
