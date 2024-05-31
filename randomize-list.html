@@ -48,11 +48,37 @@
 
 <script> 
 
+  // Teammmate names
+  const teammateNames = [
+    "Aaron",
+    "Abraham",
+    "Adam",
+    "Ali",
+    "Anvesh",
+    "Ben",
+    "Brittney",
+    "Ditwan",
+    "Eliza",
+    "Erik",
+    "Franco",
+    "Jose",
+    "Kitty",
+    "Matt",
+    "Skye"
+  ];
+
   // Add team members names on load
   (async () => {
     await customElements.whenDefined("calcite-text-area");
     await document.getElementById("names").componentOnReady();
-    document.getElementById("names").value = `Aaron\nAbraham\nAdam\nAli\nAnvesh\nBen\nBrittney\nDitwan\nEliza\nErik\nFranco\nJose\nKitty\nMatt\nSkye`;
+    // Set the team member names
+    teammateNames.forEach((teammateName, index, teammateNames) => {
+      if (index === teammateNames.length - 1) {
+        document.getElementById("names").value += `${teammateName}`; // Don't add a new line for the last name
+      } else {
+        document.getElementById("names").value += `${teammateName} \n`; // Add a new line for the next name
+      }
+    })
   })();
 
   // Randomize names
