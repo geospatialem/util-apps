@@ -21,6 +21,16 @@
     flex: 1;
     height: 100%;
   }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+  }
   body {
     margin: 1rem;
   }
@@ -40,7 +50,10 @@
       </div>
     </div>
       <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
-      <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy-to-clipboard">Copy</calcite-button>
+      <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy-to-clipboard" disabled>Copy</calcite-button>
+      <calcite-tooltip id="copy-tooltip" reference-element="copy" placement="bottom">
+        <span>Randomize names to copy the random list to your clipboard.</span>
+      </calcite-tooltip>
     </div>
 
     <calcite-alert id="copy-alert" class="app-contents" icon="copy-to-clipboard" label="A report alert" auto-close auto-close-duration="medium" kind="info" style="display:none">
@@ -48,6 +61,8 @@
       <div slot="message">You can paste the contents in an email, Team message, etc.</div>
     </calcite-alert>
 </div>
+
+<span id="at-feedback" class="sr-only" aria-live="polite"></span>
 
 <script type="module"> 
 
@@ -104,6 +119,9 @@
     // Stringify the results
     const randomListString = randomList.join("");
     document.getElementById("results").value = randomListString;
+    document.getElementById("copy").disabled = false;
+    document.getElementById("copy-tooltip").hidden = true;
+    document.getElementById("at-feedback").innerText = "Team member names have been randomized.";
   });
 
   // Copy to clipboard
