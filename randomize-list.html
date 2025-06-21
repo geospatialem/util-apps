@@ -4,8 +4,7 @@
 <head> 
   <meta charset="UTF-8"> 
   <title>Randomized Team Generator</title> 
-	<script type="module" src="https://js.arcgis.com/calcite-components/2.9.0/calcite.esm.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.9.0/calcite.css" />
+	<script type="module" src="https://js.arcgis.com/calcite-components/3.2.1/calcite.esm.js"></script>
 </head> 
 
 <style>
@@ -28,25 +27,29 @@
 </style>
   
 <body> 
-  <div class="row">
-    <div class="column">
-      <calcite-label for="names">Team member names</calcite-label>
-      <calcite-text-area spellcheck="false" id="names" placeholder="Team members" rows="20" resize="none" />
+  <calcite-loader label="Loading" text="Loading the Calcite team randomizer..."></calcite-loader>
+  <div class="app-contents" style="display:none">
+    <div class="row">
+      <div class="column">
+        <calcite-label for="names">Team member names</calcite-label>
+        <calcite-text-area spellcheck="false" id="names" placeholder="Team members" rows="20" resize="none" />
+      </div>
+      <div class="column">
+        <calcite-label for="results">Randomized list</calcite-label>
+        <calcite-text-area spellcheck="false" id="results" rows="20" read-only resize="none" />
+      </div>
     </div>
-    <div class="column">
-      <calcite-label for="results">Randomized list</calcite-label>
-      <calcite-text-area spellcheck="false" id="results" rows="20" read-only resize="none" />
+      <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
+      <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy-to-clipboard">Copy</calcite-button>
     </div>
-  </div>
-  <calcite-button id="randomize-names" width="auto">Randomize names</calcite-button>
-  <calcite-button id="copy" width="auto" appearance="outline" icon-end="copy-to-clipboard">Copy</calcite-button>
 
-  <calcite-alert id="copy-alert" icon="copy-to-clipboard" label="A report alert" auto-close auto-close-duration="medium" kind="info">
-    <div slot="title">Copied text!</div>
-    <div slot="message">You can paste the contents in an email, Team message, etc.</div>
-  </calcite-alert>
+    <calcite-alert id="copy-alert" class="app-contents" icon="copy-to-clipboard" label="A report alert" auto-close auto-close-duration="medium" kind="info" style="display:none">
+      <div slot="title">Copied text!</div>
+      <div slot="message">You can paste the contents in an email, Team message, etc.</div>
+    </calcite-alert>
+</div>
 
-<script> 
+<script type="module"> 
 
   // Teammmate names
   const teammateNames = [
@@ -71,18 +74,18 @@
   ];
 
   // Add team members names on load
-  (async () => {
-    await customElements.whenDefined("calcite-text-area");
-    await document.getElementById("names").componentOnReady();
-    // Set the team member names
-    teammateNames.forEach((teammateName, index, teammateNames) => {
-      if (index === teammateNames.length - 1) {
-        document.getElementById("names").value += `${teammateName}`; // Don't add a new line for the last name
-      } else {
-        document.getElementById("names").value += `${teammateName} \n`; // Add a new line for the next name
-      }
-    })
-  })();
+  await document.getElementById("names").componentOnReady();
+  // Set the team member names
+  teammateNames.forEach((teammateName, index, teammateNames) => {
+    if (index === teammateNames.length - 1) {
+      document.getElementById("names").value += `${teammateName}`; // Don't add a new line for the last name
+    } else {
+      document.getElementById("names").value += `${teammateName} \n`; // Add a new line for the next name
+    }
+  })
+  document.querySelector("calcite-loader").hidden = true;
+  const appContentEls = [...document.getElementsByClassName("app-contents")];
+  appContentEls.forEach(appContentEl => { appContentEl.style = "display:block" });
 
   // Randomize names
   document.getElementById("randomize-names").addEventListener("click", () => {
@@ -109,9 +112,11 @@
     copyText.selectText(); // Select the component's text
     navigator.clipboard.writeText(copyText.value); // Copy the value
     document.getElementById("copy-alert").open = true;
-    // Set focus to the alert once loaded
+  });
+
+  // Set focus to the alert once loaded
+  document.getElementById("copy-alert").addEventListener("calciteAlertOpen", () => {
     (async () => {
-      await customElements.whenDefined("calcite-alert");
       const copyAlertEl = await document.getElementById("copy-alert").componentOnReady();
       requestAnimationFrame(() => copyAlertEl.setFocus());
     })();
