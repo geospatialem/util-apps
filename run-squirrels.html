@@ -10,7 +10,7 @@
 <style>
 
   #app-loader {
-    height: 100vh;
+    height: 80vh;
   }
   
   calcite-shell {
@@ -21,18 +21,18 @@
   
 <body> 
 
+  <!-- Loader -->
+  <calcite-loader id="app-loader" label="Loading the squirrels script dialog" text="Loading..."></calcite-loader>
   <calcite-shell>
-    <!-- Loader -->
-    <calcite-loader id="app-loader" label="Loading" text="Loading..."></calcite-loader>
     <!-- Panel contents -->
-    <calcite-shell-panel slot="panel-bottom" width-scale="m">
+    <calcite-shell-panel id="panel-contents" slot="panel-bottom" width-scale="m" hidden>
       <!--Dialog -->
       <calcite-dialog id="squirrel-dialog" open heading="Squirrels script dialog" close-disabled escape-disabled>
         <p>Are you sure you want to run the squirrels script?</p>
-        <calcite-button slot="footer-start" appearance="outline" href="https://github.com/geospatialem/eastern-gray-squirrels/" target="_blank" label="Repo, opens in a new window">Repo</calcite-button>
-        <calcite-button slot="footer-start" appearance="outline" href="https://jsapi.maps.arcgis.com/apps/mapviewer/index.html?webmap=628500cb6c834ed98d8b9fc0c4c06e07" target="_blank" label="MapViewer, opens in a new window">MapViewer</calcite-button>
-        <calcite-button slot="footer-start" appearance="outline" href="https://www.arcgis.com/apps/dashboards/21159e6135bc40158c4314782fc20f5c" target="_blank" label="Dashboard, opens in a new window">Dashboard</calcite-button>
-        <calcite-button id="run-squirrels-btn" slot="footer-end" label="Run the squirrels script">Run the squirrels script 🐿️</calcite-button> 
+        <calcite-button slot="footer-start" appearance="outline" icon-end="launch" href="https://github.com/geospatialem/eastern-gray-squirrels/" target="_blank" label="Repo, opens in a new window">Repo</calcite-button>
+        <calcite-button slot="footer-start" appearance="outline" icon-end="launch" href="https://jsapi.maps.arcgis.com/apps/mapviewer/index.html?webmap=628500cb6c834ed98d8b9fc0c4c06e07" target="_blank" label="MapViewer, opens in a new window">MapViewer</calcite-button>
+        <calcite-button slot="footer-start" appearance="outline" icon-end="launch" href="https://www.arcgis.com/apps/dashboards/21159e6135bc40158c4314782fc20f5c" target="_blank" label="Dashboard, opens in a new window">Dashboard</calcite-button>
+        <calcite-button id="run-squirrels-btn" slot="footer-end" label="Run the squirrels script" icon-start="play">Run the squirrels script 🐿️</calcite-button> 
       </calcite-dialog>
       <!-- Successful alert -->
       <calcite-alert id="squirrel-alert" icon="information" label="Squirrel script status" aria-live="polite">
@@ -46,6 +46,7 @@
 <script type="module"> 
 
 const appLoader = document.getElementById("app-loader");
+const panelContents = document.getElementById("panel-contents");
 const squirrelDialog = document.getElementById("squirrel-dialog");
 const runSquirrelsBtn = document.getElementById("run-squirrels-btn");
 const squirrelAlert = document.getElementById("squirrel-alert");
@@ -53,6 +54,8 @@ const squirrelAlert = document.getElementById("squirrel-alert");
 // App initialization
 squirrelDialog.addEventListener("calciteDialogOpen", () => {
   appLoader.hidden = true;
+  panelContents.hidden = false;
+  squirrelDialog.setFocus();
 });
 
 // Run squirrel script
